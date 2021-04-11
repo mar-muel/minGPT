@@ -14,6 +14,8 @@ import torch.optim as optim
 from torch.optim.lr_scheduler import LambdaLR
 from torch.utils.data.dataloader import DataLoader
 
+from utils import sample
+
 logger = logging.getLogger(__name__)
 
 class TrainerConfig:
@@ -56,7 +58,7 @@ class Trainer:
         logger.info("saving %s", self.config.ckpt_path)
         torch.save(raw_model.state_dict(), self.config.ckpt_path)
 
-    def train(self):
+    def train(self, print_every=10):
         model, config = self.model, self.config
         raw_model = model.module if hasattr(self.model, "module") else model
         optimizer = raw_model.configure_optimizers(config)
@@ -109,6 +111,12 @@ class Trainer:
 
                     # report progress
                     pbar.set_description(f"epoch {epoch+1} iter {it}: train loss {loss.item():.5f}. lr {lr:e}")
+
+                    if it % print_every == 0:
+                        y = sample(model, "Here is what I'm thinking: ", 1000)
+                        completion = ''.join([self.train_dataset.itos[int(i)] for i in y])
+                        print(f'Model output at iteration {it}:')
+                        print(completion)
 
             if not is_train:
                 test_loss = float(np.mean(losses))
