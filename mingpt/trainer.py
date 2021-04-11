@@ -14,7 +14,7 @@ import torch.optim as optim
 from torch.optim.lr_scheduler import LambdaLR
 from torch.utils.data.dataloader import DataLoader
 
-from utils import sample
+from .utils import sample
 
 logger = logging.getLogger(__name__)
 
