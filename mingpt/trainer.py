@@ -113,10 +113,11 @@ class Trainer:
                     pbar.set_description(f"epoch {epoch+1} iter {it}: train loss {loss.item():.5f}. lr {lr:e}")
 
                     if it % print_every == 0:
-                        y = sample(model, "Here is what I'm thinking: ", 1000)
-                        completion = ''.join([self.train_dataset.itos[int(i)] for i in y])
-                        print(f'Model output at iteration {it}:')
-                        print(completion)
+                        with torch.no_grad():
+                            y = sample(raw_model, "Here is what I'm thinking: ", 1000)
+                            completion = ''.join([self.train_dataset.itos[int(i)] for i in y])
+                            print(f'Model output at iteration {it}:')
+                            print(completion)
 
             if not is_train:
                 test_loss = float(np.mean(losses))
