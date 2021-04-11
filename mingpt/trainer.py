@@ -116,7 +116,7 @@ class Trainer:
                         with torch.no_grad():
                             context = "Here is what I'm thinking: "
                             x = torch.tensor([self.train_dataset.stoi[s] for s in context], dtype=torch.long)[None,...].to(self.device)
-                            y = sample(raw_model, x, 1000)
+                            y = sample(raw_model, x, 1000)[0]
                             completion = ''.join([self.train_dataset.itos[int(i)] for i in y])
                             print(f'Model output at iteration {it}:')
                             print(completion)
