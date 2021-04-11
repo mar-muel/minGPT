@@ -114,7 +114,9 @@ class Trainer:
 
                     if it % print_every == 0:
                         with torch.no_grad():
-                            y = sample(raw_model, "Here is what I'm thinking: ", 1000)
+                            context = "Here is what I'm thinking: "
+                            x = torch.tensor([self.train_dataset.stoi[s] for s in context], dtype=torch.long)[None,...].to(self.device)
+                            y = sample(raw_model, x, 1000)
                             completion = ''.join([self.train_dataset.itos[int(i)] for i in y])
                             print(f'Model output at iteration {it}:')
                             print(completion)
